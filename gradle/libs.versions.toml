@@ -31,8 +31,10 @@ retrofit = "2.9.0"
 retrofit-gson = "2.9.0"
 interceptor = "5.0.0-alpha.6"
 
-mockkAndroid = "1.13.3"
+mockkAndroid = "1.14.0"
 turbine = "1.0.0"
+byte-buddy = "1.14.4"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -110,6 +112,8 @@ interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockkAndroid" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
+byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

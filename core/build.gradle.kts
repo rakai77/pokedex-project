@@ -52,6 +52,7 @@ dependencies {
     testImplementation(libs.mockk.android)
     testImplementation(libs.mockk.agent)
     testImplementation(libs.turbine)
+//    testImplementation(libs.byte.buddy)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

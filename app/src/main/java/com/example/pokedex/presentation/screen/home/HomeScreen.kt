@@ -12,10 +12,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,23 +35,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.core.domain.model.PokemonItem
 import com.example.pokedex.R
+import com.example.pokedex.presentation.route.AppRoute
+import com.example.pokedex.utils.SharePref
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navController: NavHostController,
     onNavigate: (String) -> Unit
 ) {
 
+    val context = LocalContext.current
     val viewModel: HomeViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState(initial = HomeUiState.Empty)
     val snackBarHostState = remember { SnackbarHostState() }
@@ -66,7 +76,27 @@ fun HomeScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Red,
                     titleContentColor = Color.White
-                )
+                ),
+                actions = {
+                    Icon(
+                        imageVector = Icons.Default.Logout,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .clickable {
+                                scope.launch {
+                                    SharePref.clearSession(context)
+                                    delay(500)
+                                    navController.navigate(AppRoute.Login.route) {
+                                        popUpTo(AppRoute.Home.route) { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+
+                                }
+                        }
+                    )
+                }
             )
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }

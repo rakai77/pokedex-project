@@ -14,11 +14,13 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -57,10 +59,10 @@ fun HomeScreen(
     navController: NavHostController,
     onNavigate: (String) -> Unit
 ) {
-
     val context = LocalContext.current
     val viewModel: HomeViewModel = koinViewModel()
-    val uiState by viewModel.uiState.collectAsState(initial = HomeUiState.Empty)
+    val uiState by viewModel.uiState.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -92,25 +94,43 @@ fun HomeScreen(
                                         popUpTo(AppRoute.Home.route) { inclusive = true }
                                         launchSingleTop = true
                                     }
-
                                 }
-                        }
+                            }
                     )
                 }
             )
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { viewModel.updateSearchQuery(it) },
+                label = { Text("Search Pokémon") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                },
+                singleLine = true
+            )
             when (uiState) {
                 is HomeUiState.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
                 is HomeUiState.Success -> {
+                    val data = (uiState as HomeUiState.Success).pokemon
+                    val filteredList = data.results.filter {
+                        it.name.contains(searchQuery, ignoreCase = true)
+                    }
+
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
@@ -118,10 +138,9 @@ fun HomeScreen(
                             .padding(10.dp),
                         state = rememberLazyGridState()
                     ) {
-                        val data = (uiState as HomeUiState.Success).pokemon
-                        items(data.results.size) { index ->
+                        items(filteredList.size) { index ->
                             PokemonCard(
-                                pokemon = data.results[index],
+                                pokemon = filteredList[index],
                                 url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png",
                                 onClick = {
                                     onNavigate.invoke("${index + 1}")

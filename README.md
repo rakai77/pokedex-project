@@ -18,3 +18,4 @@
 - **Modularization**
 - **Room Database**
 - **CI/CD**
+- **Unit Test**

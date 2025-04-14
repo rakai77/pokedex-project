@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -81,20 +82,13 @@ fun HomeScreen(
                 ),
                 actions = {
                     Icon(
-                        imageVector = Icons.Default.Logout,
+                        imageVector = Icons.Default.Person,
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier
                             .padding(end = 16.dp)
                             .clickable {
-                                scope.launch {
-                                    SharePref.clearSession(context)
-                                    delay(500)
-                                    navController.navigate(AppRoute.Login.route) {
-                                        popUpTo(AppRoute.Home.route) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                }
+                                navController.navigate(AppRoute.Profile.route)
                             }
                     )
                 }

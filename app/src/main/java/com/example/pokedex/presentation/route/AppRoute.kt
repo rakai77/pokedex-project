@@ -6,4 +6,5 @@ sealed class AppRoute(val route: String) {
     data object Register : AppRoute("register")
     data object Home : AppRoute("home")
     data object Detail : AppRoute("detail/{pokemonId}")
+    data object Profile : AppRoute("profile")
 }

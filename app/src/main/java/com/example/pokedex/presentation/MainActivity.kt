@@ -23,6 +23,7 @@ import com.example.pokedex.presentation.route.AppRoute
 import com.example.pokedex.presentation.screen.detail.DetailScreen
 import com.example.pokedex.presentation.screen.home.HomeScreen
 import com.example.pokedex.presentation.screen.login.LoginScreen
+import com.example.pokedex.presentation.screen.profile.ProfileScreen
 import com.example.pokedex.presentation.screen.register.RegisterScreen
 import com.example.pokedex.presentation.theme.PokedexTheme
 import com.example.pokedex.utils.SharePref
@@ -59,7 +60,6 @@ fun MyApp(context: Context) {
                 onBack = { navController.popBackStack() }
             )
         }
-
         composable(
             route = AppRoute.Register.route
         ) {
@@ -68,7 +68,6 @@ fun MyApp(context: Context) {
                 onBack = { navController.popBackStack() }
             )
         }
-
         composable(
             route = AppRoute.Home.route
         ) {
@@ -88,6 +87,14 @@ fun MyApp(context: Context) {
             val pokemonId = backStackEntry.arguments?.getString("pokemonId").orEmpty()
             DetailScreen(
                 pokemonId = pokemonId,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = AppRoute.Profile.route
+        ) {
+            ProfileScreen(
+                navController = navController,
                 onBack = { navController.popBackStack() }
             )
         }
